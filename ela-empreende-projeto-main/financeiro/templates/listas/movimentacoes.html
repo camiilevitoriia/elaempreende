@@ -1,0 +1,87 @@
+{% extends "modelo.html" %}
+{% load static %}
+
+{% block titulo %}
+<title>
+    Listar Entradas
+</title>
+{% endblock %}
+
+{% block corpo %}
+<style>
+    /* Estilos para a tabela com tema rosa #e21e80 */
+    .table {
+      border: 1px solid #e21e80; /* Rosa escuro */
+      border-collapse: collapse;
+      background-color: #ffe6f2; /* Rosa claro para o fundo da tabela */
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    .table th, .table td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #f3a3c6; /* Bordas em rosa mais suave */
+    }
+  
+    .table th {
+      background-color: #e21e80; /* Rosa forte para o cabeçalho */
+      color: #fff; /* Texto branco para contraste */
+    }
+  
+    .table tr:nth-child(even) {
+      background-color: #f9c6da; /* Tom de rosa claro para linhas pares */
+    }
+  
+    .table tr:hover {
+      background-color: #f3a3c6; /* Tom médio de rosa no hover */
+    }
+  
+    .btn {
+      margin: 5px;
+    }
+  
+    #success-message {
+      margin-top: 10px;
+    }
+  </style>
+<div class="container">
+<hr>
+<hr>
+    <h4>  Movimetações Cadastradas</h4>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Tipo de Movimentação</th>
+                    <th>Opções</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for movimentacao in object_list %}
+              <tr>
+                  <td>{{ movimentacao.descricao }}</td>
+                  <td>{{ movimentacao.valor }}</td>
+                  <td>{{ movimentacao.data }}</td>
+                  <td>{{ movimentacao.get_tipo_display }}</td> <!-- Exibe o tipo -->
+                  <td>
+                    <a href="{% url 'excluir-movimentacao' pk=movimentacao.pk %}" class="btn btn-danger btn-sm">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                  <td colspan="5" class="text-center">Sem movimentações cadastradas.</td>
+              </tr>
+              {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

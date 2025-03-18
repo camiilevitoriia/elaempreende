@@ -1,0 +1,78 @@
+{% extends "modelo.html" %}
+{% load static %}
+
+{% block titulo %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil dos Usuários</title>
+{% endblock %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block corpo %}
+<div class="container">
+    <h1 class="my-4">Perfis das Empreendedoras</h1>
+    <div class="row">
+        {% for empresa in empresas %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-body text-center">
+                    {% if empresa.imagem %}
+                    <img src="{{ empresa.imagem.url }}" 
+                         alt="{{ empresa.user.username }}" 
+                         class="img-fluid rounded-circle mb-3" 
+                         style="width: 150px; height: 150px;">
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         width="150" 
+                         height="150" 
+                         style="color:#e5378e;" 
+                         fill="currentColor" 
+                         class="bi bi-person-circle mb-3" 
+                         viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                    </svg>
+                    {% endif %}
+                    <h5 class="card-title">{{ empresa.user.username }}</h5>
+                    <p class="card-text">{{ empresa.descricao }}</p>
+                    <a href="{% url 'perfil_usuario' empresa.user.username %}" class="pagination-link mt-auto">Ver Perfil</a>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <h5 class="my-4">Nenhuma empreendedora registrada.</h5>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        <ul class="pagination-list">
+            {% if empresas.has_previous %}
+                <li><a href="?page=1" class="pagination-link">Anterior</a></li>
+            {% else %}
+                <li class="disabled"><span>Anterior</span></li>
+            {% endif %}
+    
+            {% for num in empresas.paginator.page_range %}
+                {% if empresas.number == num %}
+                    <li class="active"><span>{{ num }}</span></li>
+                {% elif num > empresas.number|add:'-2' and num < empresas.number|add:'2' %}
+                    <li><a href="?page={{ num }}" class="pagination-link">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if empresas.has_next %}
+                <li><a href="?page={{ empresas.next_page_number }}" class="pagination-link">Próxima</a></li>
+            {% else %}
+                <li class="disabled"><span>Próxima</span></li>
+            {% endif %}
+        </ul>
+    </div>
+    
+    
+
+</div>
+{% endblock %}

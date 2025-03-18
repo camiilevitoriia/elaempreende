@@ -1,0 +1,103 @@
+{% extends "modelo.html" %}
+{% load static %}
+
+{% block titulo %}
+<title>Listar clientes</title>
+{% endblock %}
+
+{% block corpo %}
+<style>
+  /* Estilos para a tabela com tema rosa #e21e80 */
+  .table {
+    border: 1px solid #e21e80; /* Rosa escuro */
+    border-collapse: collapse;
+    background-color: #ffe6f2; /* Rosa claro para o fundo da tabela */
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #f3a3c6; /* Bordas em rosa mais suave */
+  }
+
+  .table th {
+    background-color: #e21e80; /* Rosa forte para o cabeçalho */
+    color: #fff; /* Texto branco para contraste */
+  }
+
+  .table tr:nth-child(even) {
+    background-color: #f9c6da; /* Tom de rosa claro para linhas pares */
+  }
+
+  .table tr:hover {
+    background-color: #f3a3c6; /* Tom médio de rosa no hover */
+  }
+
+  .btn {
+    margin: 5px;
+  }
+
+  #success-message {
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container">
+    {% if aniversariantes %}
+    <div class="alert alert-info">
+        <ul style="list-style-type: none;">
+            {% for cliente in aniversariantes %}
+            <li>Hoje é aniversário de: {{ cliente.nome }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <hr>
+    <h4><i class="bi bi-people"></i> Clientes cadastrados</h4>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Endereço</th>
+                    <th><i class="bi bi-person-vcard"></i> Data de Nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr id="cliente-{{ cliente.pk }}">
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>{{ cliente.endereco }}</td>
+                    <td>{{ cliente.data_nascimento|date:"d/m/Y" }}</td>
+                    <td>
+                        <a href="{% url 'cliente_update' cliente.pk %}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'cliente_delete' cliente.pk %}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">Nenhum cliente encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "modelo.html" %}
+{% load static %}
+
+{% block titulo %}
+<title>Excluir Produto</title>
+{% endblock %}
+
+{% block corpo %}
+<div class="container">
+    <p>Confirme para excluir o produto.</p>
+
+    <h4>Excluir Produto</h4>
+
+    <form action="" method="POST">
+        <p>Deseja excluir: <b>{{ object }}?</b></p>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+</div>
+{% endblock %}

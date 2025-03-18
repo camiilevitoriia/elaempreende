@@ -1,0 +1,113 @@
+{% extends "modelo.html" %}
+{% load static %}
+
+{% block titulo %}
+    <title>Listar Tarefas</title>
+{% endblock %}
+
+{% block corpo %}
+<style>
+  /* Estilos para a tabela com tema rosa #e21e80 */
+  .table {
+    border: 1px solid #e21e80;
+    border-collapse: collapse;
+    background-color: #ffe6f2; /* Fundo em rosa claro */
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #f3a3c6; /* Bordas em rosa mais suave */
+  }
+
+  .table th {
+    background-color: #e21e80; /* Cabeçalho rosa forte */
+    color: #fff; /* Texto branco para contraste */
+  }
+
+  .table tr:nth-child(even) {
+    background-color: #f9c6da; /* Tom de rosa claro para linhas pares */
+  }
+
+  .table tr:hover {
+    background-color: #f3a3c6; /* Efeito hover em rosa médio */
+  }
+
+  .btn {
+    margin: 5px;
+  }
+
+  #success-message {
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container">
+    <hr>
+    <h4>Tarefas cadastradas</h4>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Data de Início</th>
+                <th>Data de Término</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tarefa in tarefas %}
+            <tr id="tarefa-{{ tarefa.pk }}">
+                <td>{{ tarefa.nome }}</td>
+                <td>{{ tarefa.descricao }}</td>
+                <td>{{ tarefa.data_inicio }}</td>
+                <td>{{ tarefa.data_fim }}</td>
+                <td>
+                    <a href="{% url 'editar-tarefa' tarefa.pk %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{% url 'excluir-tarefa' tarefa.pk %}" class="btn btn-danger btn-sm">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Nenhuma tarefa encontrada.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function concluirTarefa(tarefaId) {
+        $.ajax({
+            url: '/concluir-tarefa/',
+            type: 'POST',
+            data: {
+                'tarefa_id': tarefaId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#tarefa-' + tarefaId).hide();
+                    alert('Tarefa concluída com sucesso!');
+                } else {
+                    alert('Erro ao concluir a tarefa: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Erro ao concluir a tarefa: ' + error);
+            }
+        });
+    }
+</script>
+{% endblock %}

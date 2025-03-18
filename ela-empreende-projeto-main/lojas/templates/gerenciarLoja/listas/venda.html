@@ -1,0 +1,100 @@
+{% extends "modelo.html" %}
+{% load static %}
+{% load tz %}
+
+{% block titulo %}
+    <title>Listar Vendas</title>
+{% endblock %}
+
+{% block corpo %}
+<style>
+  /* Estilos para a tabela com tema rosa #e21e80 */
+  .table {
+    border: 1px solid #e21e80; /* Rosa escuro */
+    border-collapse: collapse;
+    background-color: #ffe6f2; /* Rosa claro para o fundo da tabela */
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .table th, .table td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #f3a3c6; /* Bordas em rosa mais suave */
+  }
+
+  .table th {
+    background-color: #e21e80; /* Rosa forte para o cabeçalho */
+    color: #fff; /* Texto branco para contraste */
+  }
+
+  .table tr:nth-child(even) {
+    background-color: #f9c6da; /* Tom de rosa claro para linhas pares */
+  }
+
+  .table tr:hover {
+    background-color: #f3a3c6; /* Tom médio de rosa no hover */
+  }
+
+  .btn {
+    margin: 5px;
+  }
+
+  #success-message {
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container">
+    <h4>Vendas cadastradas</h4> <!-- Título no topo da página -->
+
+    {% if success_message %}
+        <div class="alert alert-success" id="success-message">{{ success_message }}</div>
+    {% endif %}
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Produtos</th>
+                    <th>Quantidade</th>
+                    <th>Valor Total</th>
+                    <th>Data de Criação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venda in vendas %}
+                <tr>
+                    <td>
+                        <ul>
+                            {% for item in venda.itens.all %}
+                                <li>{{ item.produto.nome }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for item in venda.itens.all %}
+                                <li>{{ item.quantidade }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{ venda.total }}</td>
+                    <td>{{ venda.data_criacao }}</td>
+                    <td>
+                        <a href="{% url 'excluir_venda' venda.pk %}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhuma venda registrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
